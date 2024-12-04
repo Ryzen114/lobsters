@@ -47,8 +47,11 @@ class Comment < ApplicationRecord
   scope :above_average, -> {
     joins(:story)
       .joins("left outer join comment_stats on date(comments.created_at) = comment_stats.date")
-      .where.not(story: {user_is_author: true}) # TODO: authorship/beneficial idea
       .where("comments.score > coalesce(comment_stats.`average`, 3)")
+  }
+  scope :on_others_stories, ->(user) {
+    joins(:story)
+      .merge(Story.where.not(user: user, user_is_author: true)) # TODO: authorship/beneficial idea
   }
   scope :for_presentation, -> {
     includes(:user, :hat, moderation: :moderator, story: :user, votes: :user)
@@ -123,6 +126,10 @@ class Comment < ApplicationRecord
     # .try so tests don't need to persist a story and user
     new_record? && (story.try(:accepting_comments?) ||
       errors.add(:base, "Story is no longer accepting comments."))
+  end
+
+  def self./(short_id)
+    find_by! short_id:
   end
 
   def self.regenerate_markdown
