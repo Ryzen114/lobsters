@@ -68,4 +68,5 @@ group :test, :development do
   gem "simplecov", require: false
   gem "active_record_doctor"
   gem "database_consistency"
+  gem 'solid_queue'
 end

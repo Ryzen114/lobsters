@@ -74,6 +74,8 @@ module Lobsters
 
     # rails stop putting js on everything
     config.action_view.form_with_generates_remote_forms = false
+
+    #config.active_job.queue_adapter = :solid_queue
   end
 end
 

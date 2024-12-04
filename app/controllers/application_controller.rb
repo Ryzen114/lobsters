@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :set_traffic_style
   around_action :n_plus_one_detection
-
+  helper_method :current_user
   # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
   # because I'll be AFK a while.
   # after_action :clear_lobster_trap
@@ -40,6 +40,12 @@ class ApplicationController < ActionController::Base
   def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
     ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/)
+  end
+
+
+
+  def current_user
+    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
   end
 
   def authenticate_user

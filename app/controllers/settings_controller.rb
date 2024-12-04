@@ -7,7 +7,7 @@ class SettingsController < ApplicationController
 
   def index
     @title = "Account Settings"
-
+    @current_user = current_user
     @edit_user = @user.dup
   end
 
