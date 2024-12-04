@@ -339,4 +339,9 @@
       <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
     <% end %>
   </div>
+
+  <h2>Data Export</h2>
+<div class="boxline">
+  <%= button_to 'Export My Data', export_data_user_path(@edit_user), method: :get %>
+</div>
 </div>

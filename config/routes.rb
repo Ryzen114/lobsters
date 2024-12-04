@@ -266,4 +266,16 @@ Rails.application.routes.draw do
   get "/stats" => "stats#index"
 
   post "/csp-violation-report" => "csp#violation_report"
+
+  resources :users do
+    member do
+      get :export_data  # Use GET method for direct download
+    end
+  end
+
+  resources :users do
+    member do
+      get 'send_export_email'
+    end
+  end
 end

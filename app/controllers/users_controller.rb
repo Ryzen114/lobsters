@@ -27,6 +27,25 @@ class UsersController < ApplicationController
     end
   end
 
+  def export_data
+
+    
+    @user = User.includes(comments: :story, stories: []).find_by(username: params[:id]) 
+    @upvoted_comments = @user.votes.where(vote: 1).where.not(comment_id: nil).includes(comment: :story).map(&:comment)
+    Rails.logger.debug("Current User: #{@user.inspect}")
+    data = {
+      comments: @user.comments,
+      stories: @user.stories,
+      upvoted_comments: @upvoted_comments,
+      upvoted_stories: @user.upvoted_stories,
+     
+    }
+
+
+
+    send_data data.to_json, filename: "user_data_#{@user.id}.json", type: 'application/json'
+  end
+
   def tree
     @title = "Users"
     newest_user = User.last.id
@@ -178,4 +197,6 @@ class UsersController < ApplicationController
       redirect_to(user_path(params[:username]))
     end
   end
+
+ 
 end
